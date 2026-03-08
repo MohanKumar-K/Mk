@@ -39,3 +39,5 @@ desktop.ini
 # ===== Static files (collected) =====
 staticfiles/
 static_root/
+
+pip

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib import messages
-from .models import Contact
+from .models import Contact, PersonalInfo, Interest, SkillCategory, Project, Education, Experience
 
 
 def index(request):
@@ -15,4 +15,21 @@ def index(request):
         else:
             messages.error(request, 'Please fill in all fields.')
 
-    return render(request, 'portfolio/index.html')
+    # Fetch dynamic data
+    personal_info = PersonalInfo.objects.first()
+    interests = Interest.objects.all()
+    skill_categories = SkillCategory.objects.prefetch_related('skills').all()
+    projects = Project.objects.prefetch_related('tech_badges').all()
+    experience_entries = Experience.objects.all()
+    education_entries = Education.objects.all()
+
+    context = {
+        'personal_info': personal_info,
+        'interests': interests,
+        'skill_categories': skill_categories,
+        'projects': projects,
+        'experience_entries': experience_entries,
+        'education_entries': education_entries,
+    }
+
+    return render(request, 'portfolio/index.html', context)
