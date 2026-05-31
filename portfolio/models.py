@@ -5,7 +5,11 @@ class PersonalInfo(models.Model):
     role = models.CharField(max_length=100, default="Full Stack Developer")
     hero_description = models.TextField()
     about_description = models.TextField()
-    resume_link = models.URLField(blank=True, null=True)
+    resume_link = models.URLField(blank=True, null=True, help_text="Link for downloading resume")
+    resume_view_link = models.URLField(blank=True, null=True, help_text="Link for viewing resume in browser")
+    github_link = models.URLField(blank=True, null=True)
+    linkedin_link = models.URLField(blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -35,6 +39,7 @@ class SkillCategory(models.Model):
 class Skill(models.Model):
     category = models.ForeignKey(SkillCategory, related_name='skills', on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
+    code_snippet = models.TextField(default="print('Hello World')", help_text="Small code snippet for the flip card back")
     icon = models.CharField(max_length=10, help_text="Emoji or short text icon, e.g., '🌐'")
     order = models.IntegerField(default=0)
 

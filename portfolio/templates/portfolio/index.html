@@ -9,15 +9,36 @@
         content="Mohan Kumar — Full Stack Developer Portfolio. Skilled in Python, Django, Java, MySQL, IoT and modern web technologies.">
     <title>Mohan Kumar | Full Stack Developer</title>
 
+    <!-- Google Fonts: Inter + Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <!-- AOS CSS for Scroll Animations -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <!-- Custom CSS -->
     <link href="{% static 'portfolio/css/style.css' %}" rel="stylesheet">
+
+    <!-- GSAP 3 (Cinematic Animations) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <!-- Three.js r160 (Cinematic Particles) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
 </head>
 
 <body>
+
+    <!-- Layer 3: Three.js Cinematic Particle Canvas (Moved out to be portfolio-wide) -->
+    <canvas id="cinematicCanvas"></canvas>
+
+    <!-- Global Animated Background -->
+    <div class="animated-bg"></div>
 
     <!-- ===== NAVBAR ===== -->
     <nav class="navbar navbar-expand-lg fixed-top" id="navbar">
@@ -40,109 +61,138 @@
         </div>
     </nav>
 
-    <!-- ===== HERO SECTION ===== -->
-    <section id="home" class="hero-section">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <p class="hero-greeting">👋 Hello, I'm</p>
-                    <h1 class="hero-name">{{ personal_info.name|default:"Mohan Kumar" }}</h1>
-                    <h2 class="hero-title">{{ personal_info.role|default:"Full Stack Developer" }}</h2>
-                    <p class="hero-desc">
-                        {{ personal_info.hero_description|default:"I am a passionate Full Stack Developer with experience in Python, Django, Java, MySQL and modern web technologies. I enjoy building scalable web applications and intelligent systems. I also have interest in IoT and Embedded Systems." }}
-                    </p>
-                    <div class="hero-btns">
-                        <a href="#projects" class="btn-accent">
-                            <i class="fas fa-eye"></i> View Projects
-                        </a>
-                        {% if personal_info.resume_link %}
-                        <a href="{{ personal_info.resume_link }}" class="btn-outline-accent" target="_blank">
-                            <i class="fas fa-download"></i> Download Resume
-                        </a>
-                        {% else %}
-                        <a href="#" class="btn-outline-accent">
-                            <i class="fas fa-download"></i> Download Resume
-                        </a>
-                        {% endif %}
-                    </div>
+    <!-- ===== CINEMATIC HERO SECTION ===== -->
+    <section id="home" class="cinematic-hero">
+
+        <!-- Page load blackout (GSAP will fade this away) -->
+        <div class="hero-blackout" id="heroBlackout"></div>
+
+        <!-- Layer 1: Ambient Background Video (Blurred) -->
+        <div class="hero-bg-ambient">
+            <video id="ambientVideo" autoplay loop muted playsinline>
+                <source src="{{ MEDIA_URL }}portfoilo_avatar.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <!-- Layer 2: Cinematic Gradient Overlays -->
+        <div class="hero-gradient-overlay"></div>
+        <div class="hero-warm-glow"></div>
+
+        <!-- Responsive Hero Grid -->
+        <div class="hero-layout-grid">
+            <!-- Layer 5: Content Overlay -->
+            <div class="hero-overlay-content">
+                <p class="hero-tagline" id="heroTagline">{{ personal_info.role|default:"Full Stack Developer" }}</p>
+                <h1 class="hero-firstname" id="heroFirstname">MOHAN</h1>
+                <h1 class="hero-lastname" id="heroLastname">KUMAR</h1>
+                <p class="hero-subtitle" id="heroSubtitle">
+                    {{ personal_info.hero_description|default:"Passionate Full Stack Developer crafting scalable web
+                    applications, intelligent systems, and innovative IoT solutions with modern technologies." }}
+                </p>
+                <div class="hero-cta-group" id="heroCtaGroup">
+                    <a href="#projects" class="btn-accent">
+                        <i class="fas fa-eye"></i> View Projects
+                    </a>
+                    {% if personal_info.resume_link %}
+                    <a href="{{ personal_info.resume_link }}" class="btn-outline-accent" target="_blank">
+                        <i class="fas fa-download"></i> Download Resume
+                    </a>
+                    {% else %}
+                    <a href="#" class="btn-outline-accent">
+                        <i class="fas fa-download"></i> Download Resume
+                    </a>
+                    {% endif %}
                 </div>
-                <div class="col-lg-6">
-                    <div class="hero-visual">
-                        <div class="code-window">
-                            <div class="code-window-bar">
-                                <span class="code-dot red"></span>
-                                <span class="code-dot yellow"></span>
-                                <span class="code-dot green"></span>
-                            </div>
-                            <div class="code-window-body">
-                                <span class="comment">// developer.js</span><br>
-                                <span class="keyword">const</span> <span class="variable">developer</span> = {<br>
-                                &nbsp;&nbsp;<span class="function">name</span>: <span class="string">"Mohan
-                                    Kumar"</span>,<br>
-                                &nbsp;&nbsp;<span class="function">role</span>: <span class="string">"Full Stack
-                                    Developer"</span>,<br>
-                                &nbsp;&nbsp;<span class="function">skills</span>: [<span class="string">"Python"</span>,
-                                <span class="string">"Django"</span>,<br>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                    class="string">"Java"</span>, <span class="string">"MySQL"</span>],<br>
-                                &nbsp;&nbsp;<span class="function">passion</span>: <span class="string">"Building
-                                    scalable apps"</span>,<br>
-                                &nbsp;&nbsp;<span class="function">interests</span>: [<span class="string">"IoT"</span>,
-                                <span class="string">"Embedded"</span>],<br>
-                                &nbsp;&nbsp;<span class="function">available</span>: <span
-                                    class="keyword">true</span><br>
-                                };
-                            </div>
+            </div>
+
+            <!-- Layer 4: Foreground Video Showcase -->
+            <div class="hero-video-showcase">
+                <div class="hero-video-wrapper">
+                    <div class="hero-video-frame-cinematic">
+                        <video id="mainHeroVideo" autoplay loop muted playsinline>
+                            <source src="{{ MEDIA_URL }}portfoilo_avatar.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                        
+                    <!-- Glassmorphism Controls (Anchored Below Video) -->
+                    <div class="hero-controls" id="heroControls">
+                        <button id="playPauseBtn" class="hero-glass-btn" title="Pause/Play Video">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                        <button id="muteUnmuteBtn" class="hero-glass-btn" title="Mute/Unmute Video">
+                            <i class="fas fa-volume-mute"></i>
+                        </button>
+                        <div class="hero-sound-badge" id="soundBadge">
+                            <i class="fas fa-hand-pointer"></i> Tap for sound
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Scroll Indicator -->
+        <div class="scroll-indicator" id="scrollIndicator">
+            <span class="scroll-indicator-text">Scroll</span>
+            <div class="scroll-indicator-line"></div>
+        </div>
+
     </section>
 
     <!-- ===== ABOUT SECTION ===== -->
     <section id="about" class="section about-section">
         <div class="container">
-            <div class="text-center mb-5">
+            <div class="text-center mb-5" data-aos="fade-up">
                 <h2 class="section-title"><span>About Me</span></h2>
                 <div class="section-divider mx-auto"></div>
             </div>
-            <div class="row">
+            <div class="row" data-aos="fade-up" data-aos-delay="100">
                 <div class="col-lg-8 mx-auto text-center">
                     <p class="about-text">
-                        {{ personal_info.about_description|default:"I am a dedicated developer who loves turning ideas into reality through code. With a strong foundation in both frontend and backend technologies, I build robust, user-friendly applications. My curiosity extends beyond traditional software — I'm equally passionate about IoT systems and embedded programming, where software meets hardware to create innovative solutions." }}
+                        {{ personal_info.about_description|default:"I am a dedicated developer who loves turning ideas
+                        into reality through code. With a strong foundation in both frontend and backend technologies, I
+                        build robust, user-friendly applications. My curiosity extends beyond traditional software — I'm
+                        equally passionate about IoT systems and embedded programming, where software meets hardware to
+                        create innovative solutions." }}
                     </p>
                 </div>
             </div>
-            <div class="row g-4 mt-3">
-                {% for interest in interests %}
-                <div class="col-6 col-md-4 col-lg">
-                    <div class="interest-card">
-                        <div class="interest-icon"><i class="{{ interest.icon_class }}"></i></div>
-                        <h5>{{ interest.title }}</h5>
+            <div class="swiper swiper-interests mt-3" data-aos="fade-up" data-aos-delay="200">
+                <div class="swiper-wrapper">
+                    {% for interest in interests %}
+                    <div class="swiper-slide">
+                        <div class="interest-card">
+                            <div class="interest-icon"><i class="{{ interest.icon_class }}"></i></div>
+                            <h5>{{ interest.title }}</h5>
+                        </div>
                     </div>
-                </div>
-                {% empty %}
-                <!-- Default interests if database is empty -->
-                <div class="col-6 col-md-4 col-lg">
-                    <div class="interest-card">
-                        <div class="interest-icon"><i class="fas fa-code"></i></div>
-                        <h5>Web Development</h5>
+                    {% empty %}
+                    <!-- Default interests if database is empty -->
+                    <div class="swiper-slide">
+                        <div class="interest-card">
+                            <div class="interest-icon"><i class="fas fa-code"></i></div>
+                            <h5>Web Development</h5>
+                        </div>
                     </div>
-                </div>
-                <div class="col-6 col-md-4 col-lg">
-                    <div class="interest-card">
-                        <div class="interest-icon"><i class="fas fa-layer-group"></i></div>
-                        <h5>Full Stack Development</h5>
+                    <div class="swiper-slide">
+                        <div class="interest-card">
+                            <div class="interest-icon"><i class="fas fa-layer-group"></i></div>
+                            <h5>Full Stack</h5>
+                        </div>
                     </div>
-                </div>
-                <div class="col-6 col-md-4 col-lg">
-                    <div class="interest-card">
-                        <div class="interest-icon"><i class="fas fa-wifi"></i></div>
-                        <h5>IoT Systems</h5>
+                    <div class="swiper-slide">
+                        <div class="interest-card">
+                            <div class="interest-icon"><i class="fas fa-wifi"></i></div>
+                            <h5>IoT Systems</h5>
+                        </div>
                     </div>
+                    <div class="swiper-slide">
+                        <div class="interest-card">
+                            <div class="interest-icon"><i class="fas fa-microchip"></i></div>
+                            <h5>Embedded Systems</h5>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
         </div>
     </section>
@@ -161,10 +211,29 @@
                 <h4 class="skill-category-title"><i class="{{ category.icon_class }}"></i> {{ category.name }}</h4>
                 <div class="row g-3">
                     {% for skill in category.skills.all %}
-                    <div class="col-6 col-md-3">
-                        <div class="skill-card">
-                            <div class="skill-icon">{{ skill.icon }}</div>
-                            <h6>{{ skill.name }}</h6>
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="skill-flip-card">
+                            <div class="skill-flip-card-inner">
+                                <!-- Front Side -->
+                                <div class="skill-flip-card-front">
+                                    <div class="skill-icon">{{ skill.icon }}</div>
+                                    <h6>{{ skill.name }}</h6>
+                                </div>
+                                <!-- Back Side -->
+                                <div class="skill-flip-card-back">
+                                    <h6>{{ skill.name }}</h6>
+                                    <div class="skill-code-window mt-2">
+                                        <div class="skill-code-header">
+                                            <span class="skill-dot red"></span>
+                                            <span class="skill-dot yellow"></span>
+                                            <span class="skill-dot green"></span>
+                                        </div>
+                                        <div class="skill-code-body">
+                                            <pre><code>{{ skill.code_snippet }}</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     {% endfor %}
@@ -186,7 +255,7 @@
     <!-- ===== PROJECTS SECTION ===== -->
     <section id="projects" class="section projects-section">
         <div class="container">
-            <div class="text-center mb-5">
+            <div class="text-center mb-5" data-aos="fade-up">
                 <h2 class="section-title"><span>My Projects</span></h2>
                 <p class="section-subtitle">Things I've built</p>
                 <div class="section-divider mx-auto"></div>
@@ -194,7 +263,7 @@
             <div class="row g-4">
 
                 {% for project in projects %}
-                <div class="col-md-6">
+                <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
                     <div class="project-card">
                         <div class="project-icon"><i class="{{ project.icon_class }}"></i></div>
                         <h5>{{ project.title }}</h5>
@@ -205,7 +274,8 @@
                             {% endfor %}
                         </div>
                         {% if project.github_link %}
-                        <a href="{{ project.github_link }}" target="_blank" class="btn-github"><i class="fab fa-github"></i> View on GitHub</a>
+                        <a href="{{ project.github_link }}" target="_blank" class="btn-github"><i
+                                class="fab fa-github"></i> View on GitHub</a>
                         {% endif %}
                     </div>
                 </div>
@@ -237,7 +307,8 @@
                 <div class="col-lg-9">
                     <div class="edu-timeline">
                         {% for exp in experience_entries %}
-                        <div class="edu-timeline-item reveal-item" data-delay="{{ forloop.counter0|add:forloop.counter0|add:'00' }}">
+                        <div class="edu-timeline-item reveal-item"
+                            data-delay="{{ forloop.counter0|add:forloop.counter0|add:'00' }}">
                             <div class="edu-timeline-dot">
                                 <div class="dot-ping"></div>
                             </div>
@@ -287,7 +358,8 @@
                     <div class="edu-timeline">
 
                         {% for edu in education_entries %}
-                        <div class="edu-timeline-item reveal-item" data-delay="{{ forloop.counter0|add:forloop.counter0|add:'00' }}">
+                        <div class="edu-timeline-item reveal-item"
+                            data-delay="{{ forloop.counter0|add:forloop.counter0|add:'00' }}">
                             <div class="edu-timeline-dot">
                                 <div class="dot-ping"></div>
                             </div>
@@ -320,7 +392,7 @@
     <!-- ===== CONTACT SECTION ===== -->
     <section id="contact" class="section contact-section">
         <div class="container">
-            <div class="text-center mb-5">
+            <div class="text-center mb-5" data-aos="fade-up">
                 <h2 class="section-title"><span>Get In Touch</span></h2>
                 <p class="section-subtitle">Have a question or want to work together?</p>
                 <div class="section-divider mx-auto"></div>
@@ -370,12 +442,31 @@
     <!-- ===== FOOTER ===== -->
     <footer class="footer">
         <div class="container text-center">
-            <p>&copy; 2026 <span>Mohan Kumar</span> | Full Stack Developer</p>
+            <div class="footer-socials">
+                <a href="{{ personal_info.linkedin_link|default:'#' }}" target="_blank" class="footer-social-link"
+                    title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="{{ personal_info.github_link|default:'#' }}" target="_blank" class="footer-social-link"
+                    title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="mailto:{{ personal_info.email|default:'#' }}" class="footer-social-link" title="Email"><i
+                        class="fas fa-envelope"></i></a>
+            </div>
+            <p>&copy; 2026 <span>{{ personal_info.name|default:'Mohan Kumar' }}</span> | Full Stack Developer</p>
         </div>
     </footer>
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- AOS Animate On Scroll JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+    </script>
 
     <!-- Navbar active state on scroll -->
     <script>
@@ -411,7 +502,7 @@
 
         // Scroll Reveal Animation for Education Timeline
         const revealItems = document.querySelectorAll('.reveal-item');
-        
+
         const revealConfig = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -431,6 +522,414 @@
 
         revealItems.forEach(item => {
             revealObserver.observe(item);
+        });
+    </script>
+
+    <!-- Interactive Background Parallax -->
+    <script>
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+        let scrollY = 0;
+        let targetScrollY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            targetX = e.clientX / window.innerWidth - 0.5;
+            targetY = e.clientY / window.innerHeight - 0.5;
+        });
+
+        window.addEventListener('scroll', () => {
+            targetScrollY = window.scrollY;
+        }, { passive: true });
+
+        const interParticles = document.querySelectorAll('.inter-particle');
+
+        function animateInteractive() {
+            mouseX += (targetX - mouseX) * 0.05;
+            mouseY += (targetY - mouseY) * 0.05;
+            scrollY += (targetScrollY - scrollY) * 0.1;
+
+            if (interParticles.length > 0) {
+                interParticles.forEach((p, index) => {
+                    const speed = (index + 1) * 60;
+                    const scrollSpeed = (index + 1) * 0.25;
+                    p.style.transform = `translate(${mouseX * speed}px, ${mouseY * speed - scrollY * scrollSpeed}px)`;
+                });
+            }
+            requestAnimationFrame(animateInteractive);
+        }
+        animateInteractive();
+    </script>
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- Swiper Initializations -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Interests Swiper - configured for exactly 3 cards
+            new Swiper('.swiper-interests', {
+                effect: 'coverflow',
+                grabCursor: true,
+                centeredSlides: true,
+                slidesPerView: 3,
+                coverflowEffect: {
+                    rotate: 30,
+                    stretch: 0,
+                    depth: 100,
+                    modifier: 1,
+                    slideShadows: false,
+                },
+                loop: true,
+                speed: 800,
+                autoplay: {
+                    delay: 2000,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true
+                },
+                breakpoints: {
+                    // Mobile view fallback
+                    320: {
+                        slidesPerView: 1.5,
+                        centeredSlides: true,
+                    },
+                    // Tablet and up
+                    768: {
+                        slidesPerView: 3,
+                        centeredSlides: true,
+                    }
+                }
+            });
+        });
+    </script>
+
+    <!-- ===== Cinematic Video Controls ===== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainVideo = document.getElementById('mainHeroVideo');
+            const ambientVideo = document.getElementById('ambientVideo');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const muteUnmuteBtn = document.getElementById('muteUnmuteBtn');
+            const soundBadge = document.getElementById('soundBadge');
+            const scrollIndicator = document.getElementById('scrollIndicator');
+
+            if (mainVideo && ambientVideo) {
+                // Sync play/pause for both videos
+                playPauseBtn.addEventListener('click', () => {
+                    if (mainVideo.paused) {
+                        mainVideo.play();
+                        ambientVideo.play();
+                        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                    } else {
+                        mainVideo.pause();
+                        ambientVideo.pause();
+                        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                    }
+                });
+
+                // Mute/unmute (only foreground has audio)
+                const toggleMute = () => {
+                    if (mainVideo.muted) {
+                        mainVideo.muted = false;
+                        muteUnmuteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                        soundBadge.classList.add('hidden');
+                    } else {
+                        mainVideo.muted = true;
+                        muteUnmuteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                    }
+                };
+
+                muteUnmuteBtn.addEventListener('click', toggleMute);
+                soundBadge.addEventListener('click', toggleMute);
+
+                // Auto-hide sound badge after 4 seconds
+                setTimeout(() => {
+                    if (soundBadge && !soundBadge.classList.contains('hidden')) {
+                        soundBadge.classList.add('hidden');
+                    }
+                }, 4000);
+            }
+
+            // Scroll indicator click -> smooth scroll to #about
+            if (scrollIndicator) {
+                scrollIndicator.addEventListener('click', () => {
+                    const aboutSection = document.getElementById('about');
+                    if (aboutSection) {
+                        aboutSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            }
+
+            // Auto-mute & pause when scrolled away from hero
+            const heroSection = document.getElementById('home');
+            if (heroSection && mainVideo && ambientVideo) {
+                const heroObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (!entry.isIntersecting) {
+                            // Scrolled away — mute, pause, and reset
+                            if (!mainVideo.muted) {
+                                mainVideo.muted = true;
+                                muteUnmuteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                            }
+                            mainVideo.pause();
+                            ambientVideo.pause();
+                            mainVideo.currentTime = 0;
+                            ambientVideo.currentTime = 0;
+                            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                        } else {
+                            // Scrolled back — resume playing (stays muted)
+                            mainVideo.play();
+                            ambientVideo.play();
+                            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                        }
+                    });
+                }, { threshold: 0.15 });
+                heroObserver.observe(heroSection);
+            }
+        });
+    </script>
+
+    <!-- ===== Three.js Cinematic Particle Layer ===== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('cinematicCanvas');
+            if (!canvas || typeof THREE === 'undefined') return;
+
+            // Setup
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            const renderer = new THREE.WebGLRenderer({
+                canvas: canvas,
+                alpha: true,
+                antialias: false
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+            renderer.setClearColor(0x000000, 0);
+
+            // Create particle texture (soft glow circle)
+            const createParticleTexture = () => {
+                const size = 64;
+                const c = document.createElement('canvas');
+                c.width = size;
+                c.height = size;
+                const ctx = c.getContext('2d');
+                const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+                gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+                gradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.6)');
+                gradient.addColorStop(0.6, 'rgba(100, 200, 255, 0.2)');
+                gradient.addColorStop(1, 'rgba(0, 212, 255, 0)');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, size, size);
+                return new THREE.CanvasTexture(c);
+            };
+
+            const particleTexture = createParticleTexture();
+
+            // Create particles
+            const particleCount = 80;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const sizes = new Float32Array(particleCount);
+            const colors = new Float32Array(particleCount * 3);
+            const speeds = new Float32Array(particleCount);
+            const phases = new Float32Array(particleCount);
+
+            for (let i = 0; i < particleCount; i++) {
+                const i3 = i * 3;
+                positions[i3] = (Math.random() - 0.5) * 14;
+                positions[i3 + 1] = (Math.random() - 0.5) * 10;
+                positions[i3 + 2] = (Math.random() - 0.5) * 8;
+
+                sizes[i] = Math.random() * 0.15 + 0.03;
+                speeds[i] = Math.random() * 0.3 + 0.1;
+                phases[i] = Math.random() * Math.PI * 2;
+
+                // Cyan (50%), Purple (30%), or cool white (20%)
+                const rand = Math.random();
+                if (rand > 0.5) {
+                    // Cyan particles
+                    colors[i3] = 0.0 + Math.random() * 0.15;   // R
+                    colors[i3 + 1] = 0.7 + Math.random() * 0.2;    // G
+                    colors[i3 + 2] = 0.9 + Math.random() * 0.1;    // B
+                } else if (rand > 0.2) {
+                    // Purple particles
+                    colors[i3] = 0.55 + Math.random() * 0.15;   // R
+                    colors[i3 + 1] = 0.2 + Math.random() * 0.15;   // G
+                    colors[i3 + 2] = 0.85 + Math.random() * 0.15;  // B
+                } else {
+                    // Cool white particles
+                    colors[i3] = 0.85 + Math.random() * 0.15;
+                    colors[i3 + 1] = 0.9 + Math.random() * 0.1;
+                    colors[i3 + 2] = 0.95 + Math.random() * 0.05;
+                }
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            // Shader material for additive blending
+            const material = new THREE.PointsMaterial({
+                map: particleTexture,
+                size: 0.25,
+                transparent: true,
+                opacity: 0.6,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false,
+                vertexColors: true,
+                sizeAttenuation: true
+            });
+
+            const particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            // Mouse tracking for parallax
+            let mouseX = 0, mouseY = 0;
+            let targetMouseX = 0, targetMouseY = 0;
+
+            window.addEventListener('mousemove', (e) => {
+                targetMouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+                targetMouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+            }, { passive: true });
+
+            // Resize handler
+            const onResize = () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            };
+            window.addEventListener('resize', onResize);
+
+            // Animation loop
+            const clock = new THREE.Clock();
+            let animationId;
+
+            const animate = () => {
+                animationId = requestAnimationFrame(animate);
+
+                const elapsed = clock.getElapsedTime();
+                const posAttr = geometry.attributes.position;
+
+                // Sine-wave floating motion
+                for (let i = 0; i < particleCount; i++) {
+                    const i3 = i * 3;
+                    const speed = speeds[i];
+                    const phase = phases[i];
+
+                    posAttr.array[i3] += Math.sin(elapsed * speed + phase) * 0.002;
+                    posAttr.array[i3 + 1] += Math.cos(elapsed * speed * 0.7 + phase) * 0.0015;
+                    posAttr.array[i3 + 2] += Math.sin(elapsed * speed * 0.5 + phase * 1.3) * 0.001;
+                }
+                posAttr.needsUpdate = true;
+
+                // Smooth mouse parallax on camera
+                mouseX += (targetMouseX - mouseX) * 0.03;
+                mouseY += (targetMouseY - mouseY) * 0.03;
+                camera.position.x = mouseX * 0.4;
+                camera.position.y = -mouseY * 0.3;
+                camera.lookAt(scene.position);
+
+                renderer.render(scene, camera);
+            };
+            animate();
+
+            // Cleanup on page unload
+            window.addEventListener('beforeunload', () => {
+                cancelAnimationFrame(animationId);
+                geometry.dispose();
+                material.dispose();
+                particleTexture.dispose();
+                renderer.dispose();
+            });
+        });
+    </script>
+
+    <!-- ===== GSAP Cinematic Entrance Animations ===== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof gsap === 'undefined') return;
+
+            const tl = gsap.timeline({
+                defaults: { ease: 'power3.out' }
+            });
+
+            // 1. Fade out blackout overlay
+            tl.to('#heroBlackout', {
+                opacity: 0,
+                duration: 1.2,
+                delay: 0.3,
+                onComplete: () => {
+                    const el = document.getElementById('heroBlackout');
+                    if (el) el.style.display = 'none';
+                }
+            })
+                // 2. Tagline slides up
+                .to('#heroTagline', {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8
+                }, '-=0.6')
+                // 3. First name slides up
+                .fromTo('#heroFirstname', {
+                    opacity: 0,
+                    y: 50
+                }, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.9
+                }, '-=0.5')
+                // 4. Last name slides up
+                .fromTo('#heroLastname', {
+                    opacity: 0,
+                    y: 50
+                }, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.9
+                }, '-=0.6')
+                // 5. Subtitle fades in
+                .fromTo('#heroSubtitle', {
+                    opacity: 0,
+                    y: 30
+                }, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8
+                }, '-=0.5')
+                // 6. CTA buttons stagger in
+                .fromTo('#heroCtaGroup', {
+                    opacity: 0,
+                    y: 25
+                }, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.7
+                }, '-=0.4')
+                // 7. Controls fade in
+                .fromTo('#heroControls', {
+                    opacity: 0,
+                    y: 15
+                }, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.6
+                }, '-=0.3')
+                // 8. Scroll indicator fades in
+                .fromTo('#scrollIndicator', {
+                    opacity: 0,
+                    y: 10
+                }, {
+                    opacity: 0.6,
+                    y: 0,
+                    duration: 0.6
+                }, '-=0.3');
+
+            // Set initial states for elements animated from opacity:0
+            gsap.set('#heroTagline', { y: 30 });
         });
     </script>
 

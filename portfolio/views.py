@@ -33,3 +33,11 @@ def index(request):
     }
 
     return render(request, 'portfolio/index.html', context)
+
+
+def resume_view(request):
+    personal_info = PersonalInfo.objects.first()
+    context = {
+        'personal_info': personal_info,
+    }
+    return render(request, 'portfolio/resume.html', context)
