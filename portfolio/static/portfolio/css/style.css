@@ -1785,7 +1785,7 @@ body {
 .hero-video-showcase {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
     width: 100%;
     height: 100%;
     pointer-events: none;
@@ -1818,7 +1818,9 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center center;
     pointer-events: none;
+    transform: scale(1.02);
 }
 
 @keyframes cineMorphFrame {
